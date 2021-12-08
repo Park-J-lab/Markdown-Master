@@ -1,0 +1,50 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.drmarkdown'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// --------
+
+	implementation 'com.google.guava:guava:29.0-jre'
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
+	implementation group: 'org.json', name: 'json', version: '20190722'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.1'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.1'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.1'
+
+// --------
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+	useJUnitPlatform()
+}
