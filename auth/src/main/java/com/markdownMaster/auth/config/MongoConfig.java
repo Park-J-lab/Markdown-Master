@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
-/**
- * This file was created by aantonica on 19/05/2020
- */
 @Configuration
 @Profile({"dev"})
 public class MongoConfig extends AbstractMongoClientConfiguration {

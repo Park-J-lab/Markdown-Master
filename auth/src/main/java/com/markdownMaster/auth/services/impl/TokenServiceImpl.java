@@ -24,9 +24,11 @@ import java.util.stream.Stream;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+
 @Service
 @Log4j2
 public class TokenServiceImpl implements TokenService {
+
     @Autowired
     AuthSigningKeyResolver authSigningKeyResolver;
 
@@ -47,7 +49,6 @@ public class TokenServiceImpl implements TokenService {
         }
     }
 
-
     @Override
     public void generateToken(MarkdownUserModel markdownUserModel) {
 
@@ -62,4 +63,37 @@ public class TokenServiceImpl implements TokenService {
         markdownUserModel.setJwtToken(jwtToken);
     }
 
+    @Override
+    public List<String> getRolesFromToken(String jwtToken) {
+
+        if (isEmpty(jwtToken)) {
+            return new ArrayList<>();
+        }
+
+        String claims = new String(Base64.getUrlDecoder().decode(jwtToken.split("\\.")[1]));
+        JSONObject claimsJson = new JSONObject(claims);
+
+        // "[ADMIN, USER]"
+        String audience = claimsJson.getString("aud");
+        final String[] split = audience
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
+
+        return Stream.of(split).map(String::trim).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUserIdFromToken(String jwtToken) {
+        if (isEmpty(jwtToken)) {
+            return StringUtils.EMPTY;
+        }
+
+        // abc.123.awe
+        String claims = new String(Base64.getUrlDecoder().decode(jwtToken.split("\\.")[1]));
+        JSONObject claimsJson = new JSONObject(claims);
+
+        return claimsJson.getString("iss");
+    }
 }
+

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -70,19 +71,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-//    public UserInfoDTO retrieveUserInfo(String userId, String token) {
-//        return null;
-//    }
-    public UserInfoDTO retrieveUserInfo(String userId) {
+    public UserInfoDTO retrieveUserInfo(String userId, String token) {
 
         Optional<MarkdownUserModel> optionalMarkdownUserModel = userDAO.findById(userId);
 
+        String userIdFromToken = this.tokenService.getUserIdFromToken(token);
+        List<String> userRolesFromToken = this.tokenService.getRolesFromToken(token);
+
         if (optionalMarkdownUserModel.isPresent()) {
-            return modelMapper.map(optionalMarkdownUserModel.get(), UserInfoDTO.class);
+
+            final MarkdownUserModel markdownUserModel = optionalMarkdownUserModel.get();
+
+            if (userIdFromToken.equals(userId) || userRolesFromToken.contains("ADMIN")) {
+                return modelMapper.map(markdownUserModel, UserInfoDTO.class);
+            }
+
+            UserInfoDTO userInfoDTO = new UserInfoDTO();
+            userInfoDTO.setDisplayName(markdownUserModel.getDisplayName());
+            return userInfoDTO;
         }
 
         return null;
     }
+
 
     @Override
     public UserInfoDTO loginUser(UserLoginDTO userLoginDTO) {

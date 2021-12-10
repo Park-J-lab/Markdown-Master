@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * This file was created by aantonica on 19/05/2020
- */
 @RestController
 @RequestMapping("/role")
 @PreAuthorize("hasAnyRole('ADMIN')")

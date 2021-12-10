@@ -6,7 +6,6 @@ import com.markdownMaster.auth.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,18 +44,17 @@ public class UserController {
     //- get info about a specific user
     @GetMapping("/info/{userId}")
     @PreAuthorize("hasAnyRole('ANONYMOUS', 'USER', 'ADMIN')")
-    public UserInfoDTO getUserInfo(@PathVariable String userId) {
+    public UserInfoDTO getUserInfo(@PathVariable String userId, HttpServletRequest request) {
 
-        // param , HttpServletRequest request
-//        String tokenUnstripped = request.getHeader(AUTHORIZATION);
-//        String token = null;
-//        if(!isEmpty(tokenUnstripped)) {
-//            token = StringUtils.removeStart(tokenUnstripped, "Bearer").trim();
-//        }
-//        return userService.retrieveUserInfo(userId, token);
+        String tokenUnstripped = request.getHeader(AUTHORIZATION);
+        String token = null;
+        if(!isEmpty(tokenUnstripped)) {
+            token = StringUtils.removeStart(tokenUnstripped, "Bearer").trim();
+        }
 
-        return userService.retrieveUserInfo(userId);
+        return userService.retrieveUserInfo(userId, token);
     }
+
 
     @PostMapping("/login")
     @PreAuthorize("hasAnyRole('ANONYMOUS')")
@@ -66,9 +64,5 @@ public class UserController {
         return userService.loginUser(userLoginDTO);
     }
 
-//- delete a user
-    // TODO: homework
-//- modify a user
-    // TODO: homework
 }
 

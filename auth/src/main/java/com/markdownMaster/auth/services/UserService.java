@@ -9,8 +9,7 @@ public interface UserService {
     void createUser(UserInfoDTO userInfoDTO);
 
     //    user fetching
-//    UserInfoDTO retrieveUserInfo(String userId, String token);
-    UserInfoDTO retrieveUserInfo(String userId);
+    UserInfoDTO retrieveUserInfo(String userId, String token);
 
     //    user login
     UserInfoDTO loginUser(UserLoginDTO userLoginDTO);
